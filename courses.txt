@@ -1,0 +1,2 @@
+CPE 303,Hci
+CSC 307,Numerical computation

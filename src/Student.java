@@ -34,15 +34,19 @@ public class Student {
         this.studentAge = studentAge;
     }
 
-    void enrollCourse(Course course){
-        for (Course enrolledcourse: enrolledCourses){
-            if( course.getCourseCode().equals(enrolledcourse.getCourseCode())){
-                IO.println("Already enrolled to this course");
-                return;
+    boolean enrollCourse(Course course){
+
+        for(Course enrolledCourse : enrolledCourses){
+            if(course.getCourseCode()
+                    .equalsIgnoreCase(enrolledCourse.getCourseCode())){
+
+                return false;
             }
         }
 
         enrolledCourses.add(course);
+
+        return true;
     }
 
     void unenrollCourse(String courseCode){

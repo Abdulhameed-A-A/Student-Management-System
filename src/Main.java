@@ -2,6 +2,9 @@ static Scanner scanner = new Scanner(System.in);
 static StudentManagementSystem studManage = new StudentManagementSystem();
 
 void main() {
+    studManage.loadStudentsFromFile();
+    studManage.loadCoursesFromFile();
+    studManage.loadEnrollmentsFromFile();
     IO.println("-----Student Management System-----");
     int option;
     boolean running = true;
@@ -12,7 +15,7 @@ void main() {
         while(true){
             option = getValidInputInt("Enter your option: ");
             switch(option) {
-                case 1, 2, 3, 4, 5, 6, 7 -> {}
+                case 1, 2, 3, 4, 5, 6, 7, 8 -> {}
                 default -> {
                     IO.println("Please enter a number between (1-6)");
                     continue;
@@ -27,11 +30,11 @@ void main() {
             case 3 -> enrollStudent();
             case 4 -> searchStudent();
             case 5 -> displayStudent();
-            case 6 -> updateStudent();
-            case 7 -> running = false;
+            case 6 -> updateStudentCourse();
+            case 7 -> deleteStudentCourse();
+            case 8 -> running = false;
         }
     }
-
 }
 
 void displayMenu() {
@@ -41,7 +44,8 @@ void displayMenu() {
     IO.println("4. Search Student");
     IO.println("5. Display Students");
     IO.println("6. Update");
-    IO.println("7. Exit");
+    IO.println("7. Delete");
+    IO.println("8. Exit");
 }
 
 void addStudent(){
@@ -66,8 +70,9 @@ void addCourse(){
     }
     String inputCourseName = capitalizeFirstLetter(getValidInputString("Enter Course Name: "));
 
-    studManage.addCourse(inputCourseCode, inputCourseName);
-    IO.println("Course added successfully");
+    if(studManage.addCourse(inputCourseCode, inputCourseName)){
+        IO.println("Course added successfully");
+    }
 }
 
 void enrollStudent(){
@@ -76,9 +81,9 @@ void enrollStudent(){
 
     if(studManage.enrollStudentInCourse(inputId, inputCourseCode)){
         IO.println("Course enrolled successfully");
+    } else {
+        IO.println("Error Enrolling Course");
     }
-
-    IO.println("Error Enrolling Course");
 }
 
 void searchStudent(){
@@ -107,7 +112,7 @@ void displayStudent(){
     studManage.displayStudents();
 }
 
-void updateStudent(){
+void updateStudentCourse(){
     boolean running = true;
 
     while(running){
@@ -124,6 +129,45 @@ void updateStudent(){
             case 4 -> running = false;
             default -> IO.println("Enter a valid option");
         }
+    }
+}
+
+void deleteStudentCourse(){
+    boolean running = true;
+
+    while(running){
+        IO.println("1. Delete Student");
+        IO.println("2. Delete Course");
+        IO.println("3. Back");
+        int option = getValidInputInt("Enter option(1-2): ");
+
+        switch (option) {
+            case 1 -> deleteStudent();
+            case 2 -> deleteCourse();
+            case 3 -> running = false;
+            default -> IO.println("Enter a valid option");
+        }
+    }
+}
+
+//delete Methods
+
+void deleteStudent(){
+    int inputId = getValidInputInt("Enter student Id: ");
+
+    if(!studManage.deleteStudent(inputId)){
+        IO.println("Student Id entered does not exist");
+    } else {
+        IO.println("Student Successfully deleted");
+    }
+}
+
+void deleteCourse(){
+    String inputCourseCode =  getValidInputString("Enter Course Code: ").toUpperCase();
+    if(!studManage.deleteCourse(inputCourseCode)){
+        IO.println("Unable to delete Course. Student Still Enrolled");
+    } else {
+        IO.println("Course Deleted Successfully");
     }
 }
 
